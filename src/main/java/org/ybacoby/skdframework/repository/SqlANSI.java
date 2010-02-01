@@ -5,14 +5,13 @@
 
 package org.ybacoby.skdframework.repository;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 /**
  *
  * @author cristovao
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Entity {
-    String table() default "";
+public class SqlANSI extends Sql {
+
+    public SqlANSI(Object entity) {
+        super(entity);
+    }
 }

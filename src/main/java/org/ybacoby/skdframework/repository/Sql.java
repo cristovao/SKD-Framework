@@ -2,64 +2,83 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.ybacoby.skdframework.repository;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 /**
  *
- * @author Fabio
+ * @author Cristovao
  */
-public final class Sql
-{
-    private Entity entity;
+public abstract class Sql {
+
+    private Object entity;
+    protected Class clasz;
     private StringBuilder construtor;
 
-    public Sql(Entity entity) {
+    /**
+     * Construtor inicial que recebe um objeto como entidade
+     * @param entity Usado para criacao, alteracao, pesquisa e delecao.
+     */
+    public Sql(Object entity) {
         this.entity = entity;
+        this.construtor = new StringBuilder();
+        this.clasz = entity.getClass();
+    }
+
+    /**
+     * Construtor inicial que recebe uma classe para
+     * trabalhar retorno de consultas
+     * @param clasz
+     */
+    public Sql(Class clasz) {
+        this.clasz = clasz;
         this.construtor = new StringBuilder();
     }
 
+    /**
+     * Comando SELECT do banco de dados
+     * @return
+     */
     public Sql select() {
+        this.construtor.append("SELECT ");
         int i = 0;
-        int total = this.entity.columnsId().length;
-        for (String id : this.entity.columnsId()) {
-            if (i < total-1) {
-                this.construtor.append("SELECT ").append(id).append(", ");
-            } else {
-                this.construtor.append("SELECT ").append(id);
+        int total = this.clasz.getDeclaredFields().length;
+        for (Field field : this.clasz.getDeclaredFields()) {
+            if (i < total) {
+                this.construtor.append(field.getName().toLowerCase()).append(", ");
             }
             i++;
         }
+        this.construtor.delete(this.construtor.length() - 2, this.construtor.length());
 
-        i = 0;
-        total = this.entity.getClass().getDeclaredFields().length;
-        for (Field field : this.entity.getClass().getDeclaredFields()) {
-            if (i < total-1) {
-                this.construtor.append(field.getName()).append(", ");
-            } else {
-                this.construtor.append(field.getName()).append(" ");
-            }
-            i++;
-        }
+        this.construtor.append(" ").append("FROM ").append(this.getTableName());
 
-        this.construtor.append("FROM ").append(entity.getTable())
-                .append(" ");
 
         return this;
     }
 
-    public Sql insert() throws IllegalArgumentException, IllegalAccessException {
-        this.construtor.append("INSERT INTO ").append(this.entity.getTable()).append(" (");
+    private String getTableName() {
+        Entity entityAnnotation = (Entity)this.clasz.getAnnotation(Entity.class);
+
+        if (entityAnnotation == null) {
+            return this.clasz.getSimpleName().toLowerCase();
+        }
+        return entityAnnotation.table();
+
+    }
+
+    protected Sql insert() throws IllegalArgumentException, IllegalAccessException {
+        this.construtor.append("INSERT INTO ").append(this.getTableName()).append(" (");
 
         int iteracao = 0;
-        int total = this.entity.getClass().getDeclaredFields().length;
-        for (Field field : this.entity.getClass().getDeclaredFields()) {
-            if (iteracao < total-1) {
+        int total = this.clasz.getDeclaredFields().length;
+        for (Field field : this.clasz.getDeclaredFields()) {
+            if (iteracao < total - 1) {
                 this.construtor.append(field.getName()).append(", ");
             } else {
-                this.construtor.append(field.getName()).append(" ");
+                this.construtor.append(field.getName());
             }
             iteracao++;
         }
@@ -67,12 +86,12 @@ public final class Sql
         iteracao = 0;
         this.construtor.append(") VALUES (");
 
-        for (Field field : this.entity.getClass().getDeclaredFields()) {
+        for (Field field : this.clasz.getDeclaredFields()) {
             field.setAccessible(true);
-            if (iteracao < total-1) {
-                this.construtor.append(" '").append(field.get(this.entity)).append("', ");
+            if (iteracao < total - 1) {
+                this.construtor.append("'").append(field.get(this.entity)).append("', ");
             } else {
-                this.construtor.append(" '").append(field.get(this.entity)).append("' ");
+                this.construtor.append("'").append(field.get(this.entity)).append("'");
             }
             iteracao++;
         }
@@ -82,69 +101,109 @@ public final class Sql
         return this;
     }
 
-    public Sql update() throws IllegalArgumentException, IllegalAccessException {
-        this.construtor.append("UPDATE ").append(this.entity.getTable()).append(" SET ");
+    protected Sql update() throws IllegalArgumentException, IllegalAccessException {
+        this.construtor.append("UPDATE ").append(this.getTableName()).append(" SET ");
 
         Integer iteracao = 0;
-        int total = this.entity.getClass().getDeclaredFields().length;
-        for (Field field : this.entity.getClass().getDeclaredFields()) {
+        int total = this.clasz.getDeclaredFields().length;
+        for (Field field : this.clasz.getDeclaredFields()) {
             field.setAccessible(true);
-            if (iteracao < total-1) {
-                this.construtor.append(field.getName()).append(" = '")
-                        .append(field.get(this.entity)).append("', ");
+            if (iteracao < total - 1) {
+                this.construtor.append(field.getName()).append(" = '").append(field.get(this.entity)).append("', ");
             } else {
-                this.construtor.append(field.getName()).append(" = '")
-                        .append(field.get(this.entity)).append("' ");
+                this.construtor.append(field.getName()).append(" = '").append(field.get(this.entity)).append("'");
             }
-            
+
             iteracao++;
         }
 
-        this.where().igual(this.entity.id, this.entity.getId().toString());
+        iteracao = 0;
+        total = this.getIdsValues().size();
+        for (String id : this.getIdsColumns()) {
+            if (iteracao < total - 1) {
+                this.where().equals(id, this.getIdsValues().get(iteracao)).and();
+            } else {
+                this.where().equals(id, this.getIdsValues().get(iteracao));
+            }
+            iteracao++;
+        }
 
         return this;
     }
 
-    public Sql delete() {
-        this.construtor.append("DELETE FROM ").append(this.entity.getTable())
-                .append(" ");
-        this.where().igual(this.entity.id, this.entity.getId().toString());
+    private ArrayList<String> getIdsColumns() {
+        ArrayList<String> ids = new ArrayList<String>();
+
+        for (Field field : this.clasz.getFields()) {
+            Id id = field.getAnnotation(Id.class);
+            if (!(id == null)) {
+//                if (id.column() == null) {
+                    ids.add(field.getName().toLowerCase());
+//                } else {
+//                    ids.add(id.column());
+//                }
+            }
+        }
+
+        return ids;
+    }
+
+    private ArrayList<String> getIdsValues() {
+        ArrayList<String> ids = new ArrayList<String>();
+
+        for (Field field : this.clasz.getFields()) {
+            field.setAccessible(true);
+            Id id = field.getAnnotation(Id.class);
+            if (!(id == null)) {
+                ids.add(field.toString());
+            }
+        }
+
+        return ids;
+    }
+
+    protected Sql delete() {
+        this.construtor.append("DELETE FROM ").append(this.getTableName()).append(" ");
+        Integer iteracao = 0;
+        Integer total = this.getIdsValues().size();
+        for (String id : this.getIdsColumns()) {
+            if (iteracao < total - 1) {
+                this.where().equals(id, this.getIdsValues().get(iteracao)).and();
+            } else {
+                this.where().equals(id, this.getIdsValues().get(iteracao));
+            }
+            iteracao++;
+        }
         return this;
     }
 
     public Sql where() {
-        this.construtor.append("WHERE ");
+        this.construtor.append(" WHERE ");
         return this;
     }
 
-    public Sql igual(String coluna, String valor) {
-        this.construtor.append(coluna).append(" = ").append("'")
-                .append(valor).append("' ");
+    public Sql equals(String coluna, String valor) {
+        this.construtor.append(coluna).append(" = ").append("'").append(valor).append("'");
         return this;
     }
 
-    public Sql diferente(String coluna, String valor) {
-        this.construtor.append(coluna).append(" != ").append("'")
-                .append(valor).append("' ");
+    public Sql different(String coluna, String valor) {
+        this.construtor.append(coluna).append(" != ").append("'").append(valor).append("'");
         return this;
     }
 
     public Sql like(String coluna, String valor) {
-        this.construtor.append(coluna).append(" LIKE ").append("'%")
-                .append(valor).append("%' ");
+        this.construtor.append(coluna).append(" LIKE ").append("'").append(valor).append("'");
         return this;
     }
 
     public Sql ilike(String coluna, String valor) {
-        this.construtor.append(coluna).append(" LIKE ").append("'")
-                .append(valor).append("' ");
+        this.construtor.append(coluna).append(" LIKE ").append("'%").append(valor).append("%'");
         return this;
     }
 
     public Sql between(String coluna, String valor, String valor2) {
-        this.construtor.append(coluna).append(" BETWEEN ").append("'")
-                .append(valor).append("'")
-                .append(" AND ").append("'").append(valor).append("' ");
+        this.construtor.append(coluna).append(" BETWEEN ").append("'").append(valor).append("'").append(" AND ").append("'").append(valor).append("' ");
         return this;
     }
 
@@ -158,7 +217,9 @@ public final class Sql
         return this;
     }
 
-    public String construir() {
-        return this.construtor.toString();
+    @Override
+    public String toString() {
+        String retorno = this.construtor.toString();
+        return retorno+";";
     }
 }

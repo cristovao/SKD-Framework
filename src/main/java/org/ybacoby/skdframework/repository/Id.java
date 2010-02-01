@@ -5,14 +5,16 @@
 
 package org.ybacoby.skdframework.repository;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  *
  * @author cristovao
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Entity {
-    String table() default "";
+@Target(ElementType.FIELD)
+public @interface Id {
 }
