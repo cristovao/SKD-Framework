@@ -135,7 +135,7 @@ public abstract class Sql {
         ArrayList<String> ids = new ArrayList<String>();
 
         for (Field field : this.clasz.getFields()) {
-            Id id = field.getAnnotation(Id.class);
+            PrimaryKey id = field.getAnnotation(PrimaryKey.class);
             if (!(id == null)) {
 //                if (id.column() == null) {
                     ids.add(field.getName().toLowerCase());
@@ -153,7 +153,7 @@ public abstract class Sql {
 
         for (Field field : this.clasz.getFields()) {
             field.setAccessible(true);
-            Id id = field.getAnnotation(Id.class);
+            PrimaryKey id = field.getAnnotation(PrimaryKey.class);
             if (!(id == null)) {
                 ids.add(field.toString());
             }

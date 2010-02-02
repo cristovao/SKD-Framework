@@ -11,7 +11,7 @@ package org.ybacoby.skdframework.repository;
 @Entity(table = "Test")
 public class EntityTestTable {
 
-    @Id
+    @PrimaryKey
     private Integer id;
     private String nome;
 
@@ -38,7 +38,7 @@ public class EntityTestTable {
 
     public static class PersonTest {
 
-        @Id
+        @PrimaryKey
         private Integer id;
         private String nome;
 

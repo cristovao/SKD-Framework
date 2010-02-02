@@ -25,7 +25,7 @@ import org.ybacoby.skdframework.Telephone;
  *
  * @author cristovao
  */
-public class Repository {
+public final class Repository {
 
     private final String driver;
     private final String url;
@@ -34,17 +34,37 @@ public class Repository {
     private Connection conexao;
     private Statement statement;
 
-    public static Repository getInstance(String driver, String url, String usuario, String senha) {
-        return new Repository(driver, url, usuario, senha);
-    }
-
-    private Repository(String driver, String url, String usuario, String senha) {
+    /**
+     * Constructor para permissao de acesso no banco de dados, no caso
+     * deste framework, como se trabalha com mais de um banco de dados
+     * entao tambem trabalhasse com mais de uma conexao, de toda forma
+     * o framework em si nunca dara acesso para o usuario abrir ou mesmo
+     * fechar uma transacao, ja que se for para permitir algo assim, entao
+     * a necessidade de um construtor seria inutil, por esse motivo as
+     * opcoes de abrir e fechar o banco para cada transacao sao transparentes
+     * aos usuarios do sistema em si, essa forma foi escolhida pelo fato
+     * do framework ter como objetivo ser simples, por tal razao qual seria
+     * a necessidade de um usuario ter que ter permissao de abrir e fechar o
+     * banco de dados, se o mesmo so quer salvar, deletar e pesquisar?
+     * @param driver O nome do driver que devera ser executado, requisito do JDBC
+     * @param url O caminho onde esta o banco de dados;
+     * @param usuario O login do usuario para acesso ao banco de dados diretamente
+     * @param senha A senha do usuario para acesso ao banco de dados diretamente
+     */
+    public Repository(String driver, String url, String usuario, String senha) {
         this.driver = driver;
         this.senha = senha;
         this.url = url;
         this.usuario = usuario;
     }
 
+    /**
+     * A necessidade de usuario abrir e fechar conexoes do banco
+     * eh uma pratica desnecessaria e desaconselhada, deixando assim
+     * para que o proprio sistemas cuide disso.
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
     private Repository open() throws SQLException, ClassNotFoundException {
         Class.forName(this.driver);
         conexao = DriverManager.getConnection(url, usuario, senha);
@@ -52,12 +72,39 @@ public class Repository {
         return this;
     }
 
+    /**
+     * A necessidade de usuario abrir e fechar conexoes do banco
+     * eh uma pratica desnecessaria e desaconselhada, deixando assim
+     * para que o proprio sistemas cuide disso.
+     * @throws SQLException
+     */
     private Repository close() throws SQLException {
         statement.close();
         conexao.close();
         return this;
     }
 
+    /**
+     * Este comando sera unicamente para ser utilizado para salvar objetos
+     * no banco de dados, tendo como unica necessidade apenas indicar pela
+     * annotation de acesso as chaves primarias da tabela na classe que
+     * sera entidade do sistema, ou mesmo modelo.
+     * <br/>
+     * No caso caso a entidade tenha algum conteudo nas suas chaves primarias
+     * entao o proprio framework realizara a opcao de update automaticamente,
+     * somente realizando a operacao de insert caso o conteudo de suas
+     * chaves primarias esteja ausente ou caso o framework nao tenha
+     * encontrado o objeto no banco de dados.
+     * <br/>
+     * Assim nao sera necessario fazer com que o usuario tenha de realizar
+     * malabarismos desnecessarios, apenas preencher os dados no objeto e
+     * mandar salvar.
+     * @param entity O objeto que devera ser persistido no banco de dados
+     * @throws SQLException
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     */
     public Repository save(Object entity) throws SQLException, IllegalArgumentException, IllegalAccessException, ClassNotFoundException {
         this.open();
         Sql sql = new SqlANSI(entity);
@@ -66,6 +113,16 @@ public class Repository {
         return this;
     }
 
+    /**
+     * Aqui realiza a funcao de delecao da entidade no banco de dados,
+     * entratanto para que seja efetiva essa delecao o objeto
+     * deve ser inicialmente carregado com suas devidas chaves primarias
+     * com conteudo, para assim ser utilizado este metodo, caso o objeto
+     * nao seja encontrado no banco de dados, o mesmo nao sera deletado.
+     * @param entity O objeto que deseja excluir do banco de dados
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
     public Repository delete(Object entity) throws SQLException, ClassNotFoundException {
         this.open();
         Sql sql = new SqlANSI(entity);
