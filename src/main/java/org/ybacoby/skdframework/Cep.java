@@ -5,40 +5,48 @@
 
 package org.ybacoby.skdframework;
 
+import org.ybacoby.skdframework.utils.I18nResources;
+
 /**
- * Classe que serve para tratar de ceps
+ * Classe que serve para tratar de ceps, neste caso
+ * como um tipo, ja que o mesmo nem representa um
+ * numero e nem mesmo uma string, entao o cep
+ * sera referenciado como um tipo unico, sendo
+ * tratado de forma diferenciada para cada situacao
  * @author cristovao
  */
 public final class Cep implements DocumentState<Cep> {
 
-    private final String firstZipNumber;
-    private final String lastZipNumber;
+    private final String zipNumber;
 
+    /**
+     * Constructor
+     * @param zip A string com ou sem a formatacao padrao de um
+     * cep, neste caso XXXXX-XXX
+     */
     public Cep(String zip) {
-        if (zip.length() < 7 || zip.length() > 8) throw new IllegalArgumentException("i18n.ErrorMessage.NotZipString");
+        if (zip.length() < 7 || zip.length() > 8) throw new IllegalArgumentException(I18nResources.NotZipString.toString());
         zip.replaceAll("-", "");
-        this.firstZipNumber = zip.substring(0, 5);
-        this.lastZipNumber = zip.substring(5);
+        this.zipNumber = zip;
     }
 
     @Override
     public boolean equals(Object arg0) {
         if (!(arg0 instanceof Cep)) return false;
         Cep cep = (Cep)arg0;
-        return this.firstZipNumber.equals(cep.firstZipNumber) && this.lastZipNumber.equals(cep.lastZipNumber)?true:false;
+        return this.zipNumber.equals(cep.zipNumber);
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 37 * hash + (this.firstZipNumber != null ? this.firstZipNumber.hashCode() : 0);
-        hash = 37 * hash + (this.lastZipNumber != null ? this.lastZipNumber.hashCode() : 0);
+        hash = 37 * hash + (this.zipNumber != null ? this.zipNumber.hashCode() : 0);
         return hash;
     }
     
     @Override
     public String toString() {
-        return String.format("%s-%s", this.firstZipNumber, this.lastZipNumber);
+        return String.format("%s-%s", this.zipNumber.substring(0, 5), this.zipNumber.substring(5));
     }
 
     @Override
@@ -48,9 +56,7 @@ public final class Cep implements DocumentState<Cep> {
 
     @Override
     public Integer getValue() {
-        StringBuilder string = new StringBuilder();
-        string.append(this.firstZipNumber).append(lastZipNumber);
-        return Integer.parseInt(string.toString());
+        return Integer.parseInt(this.zipNumber);
     }
 
 }

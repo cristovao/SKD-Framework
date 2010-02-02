@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Locale;
+import org.ybacoby.skdframework.Cep;
 import org.ybacoby.skdframework.Money;
 import org.ybacoby.skdframework.Rg;
 
@@ -94,6 +95,8 @@ public class Repository {
                     field.set(entity, new Money(resultset.getLong(field.getName()), Currency.getInstance(Locale.US)));
                 } else if (field.getType().equals(Rg.class)) {
                     field.set(entity, new Rg(resultset.getString(field.getName())));
+                } else if (field.getType().equals(Cep.class)) {
+                    field.set(entity, new Cep(resultset.getString(field.getName())));
                 }
             }
 
