@@ -16,6 +16,7 @@ import java.util.Locale;
 import org.ybacoby.skdframework.Cep;
 import org.ybacoby.skdframework.Cnpj;
 import org.ybacoby.skdframework.Date;
+import org.ybacoby.skdframework.InscricaoEstadual;
 import org.ybacoby.skdframework.Money;
 import org.ybacoby.skdframework.Rg;
 
@@ -103,6 +104,8 @@ public class Repository {
                     field.set(entity, new Cnpj(resultset.getString(field.getName())));
                 } else if (field.getType().equals(Date.class)) {
                     field.set(entity, new Date(resultset.getDate(field.getName())));
+                } else if (field.getType().equals(InscricaoEstadual.class)) {
+                    field.set(entity, new InscricaoEstadual(resultset.getString(field.getName())));
                 }
             }
 

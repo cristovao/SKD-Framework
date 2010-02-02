@@ -27,67 +27,83 @@ public final class Estado implements Comparable<Estado>, List<Cidade> {
         this.cidades = new ArrayList<Cidade>();
     }
 
+    @Override
     public <T> T[] toArray(T[] arg0) {
         return cidades.toArray(arg0);
     }
 
+    @Override
     public Object[] toArray() {
         return cidades.toArray();
     }
 
+    @Override
     public List<Cidade> subList(int arg0, int arg1) {
         return cidades.subList(arg0, arg1);
     }
 
+    @Override
     public int size() {
         return cidades.size();
     }
 
+    @Override
     public Cidade set(int arg0, Cidade arg1) {
         return cidades.set(arg0, arg1);
     }
 
+    @Override
     public boolean retainAll(Collection<?> arg0) {
         return cidades.retainAll(arg0);
     }
 
+    @Override
     public boolean removeAll(Collection<?> arg0) {
         return cidades.removeAll(arg0);
     }
 
+    @Override
     public Cidade remove(int arg0) {
         return cidades.remove(arg0);
     }
 
+    @Override
     public boolean remove(Object arg0) {
         if (!(arg0 instanceof Cidade)) return false;
         return cidades.remove((Cidade)arg0);
     }
 
+    @Override
     public ListIterator<Cidade> listIterator(int arg0) {
         return cidades.listIterator(arg0);
     }
 
+    @Override
     public ListIterator<Cidade> listIterator() {
         return cidades.listIterator();
     }
 
+    @Override
     public int lastIndexOf(Object arg0) {
         return cidades.lastIndexOf(arg0);
     }
 
+    @Override
     public Iterator<Cidade> iterator() {
         return cidades.iterator();
     }
 
+    @Override
     public boolean isEmpty() {
         return cidades.isEmpty();
     }
 
+    @Override
     public int indexOf(Object arg0) {
         return cidades.indexOf(arg0);
     }
 
+    @Override
     public Cidade get(int arg0) {
         return cidades.get(arg0);
     }
@@ -127,10 +143,12 @@ public final class Estado implements Comparable<Estado>, List<Cidade> {
 
     
 
+    @Override
     public boolean containsAll(Collection<?> arg0) {
         return cidades.containsAll(arg0);
     }
 
+    @Override
     public boolean contains(Object arg0) {
         return cidades.contains((Cidade)arg0);
     }
@@ -142,14 +160,17 @@ public final class Estado implements Comparable<Estado>, List<Cidade> {
         return false;
     }
 
+    @Override
     public void clear() {
         cidades.clear();
     }
 
+    @Override
     public void add(int arg0, Cidade arg1) {
         cidades.add(arg0, arg1);
     }
 
+    @Override
     public boolean add(Cidade arg0) {
         return cidades.add(arg0);
     }
