@@ -5,20 +5,22 @@
 
 package org.ybacoby.skdframework;
 
+import org.ybacoby.skdframework.utils.I18nResources;
+
 /**
  *
  * @author cristovao
  */
-public class InscricaoEstadual extends I18nAllSystem implements DocumentState<InscricaoEstadual> {
+public class InscricaoEstadual implements DocumentState<InscricaoEstadual> {
 
     private final String inscricaoNumber;
 
     public InscricaoEstadual(String inscricaoNumber) {
         if (inscricaoNumber == null) {
-            new IllegalArgumentException(this.getResource("i18n.ErrorMessage.NoCpfString"));
+            new IllegalArgumentException(I18nResources.NoCpfString.toString());
         }
         if (inscricaoNumber.length() < 14) {
-            new IllegalArgumentException(this.getResource("i18n.ErrorMessage.NoCpfString"));
+            new IllegalArgumentException(I18nResources.NoCpfString.toString());
         }
         this.inscricaoNumber = inscricaoNumber;
     }

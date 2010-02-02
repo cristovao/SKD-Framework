@@ -16,6 +16,8 @@ public enum I18nResources {
     FailedLoaderEmailProvider("i18n.ErrorMessage.FailedLoaderEmailProvider"),
     EmailNotAuthentication("i18n.ErrorMessage.EmailNotAuthentication"),
     FailedSendEmailNullTo("i18n.ErrorMessage.FailedSendEmailNullTo"),
+    NoCpfString("i18n.ErrorMessage.NoCpfString"),
+    NoPhoneString("i18n.ErrorMessage.NoPhoneString"),
     FailedSendEmailAuthentication("i18n.ErrorMessage.FailedSendEmailAuthentication");
     
     // BEGIN ATTRIBUTE CLASS

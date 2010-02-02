@@ -3,19 +3,22 @@
  */
 package org.ybacoby.skdframework;
 
+import org.ybacoby.skdframework.utils.I18nResources;
+import org.ybacoby.skdframework.utils.Validate;
+
 /**
  * @author cristovao
  *
  */
-public final class Rg extends I18nAllSystem implements DocumentState<Rg> {
+public final class Rg extends Validate implements DocumentState<Rg> {
 
     private final String number;
 
     public Rg(String rg) throws IllegalArgumentException {
         if (rg == null) {
-            throw new IllegalArgumentException(this.getResource("i18n.ErrorMessage.NoRgString"));
+            throw new IllegalArgumentException(I18nResources.NoCpfString.toString());
         } else if (rg.length() < 6 || !this.containsOnlyNumbers(rg)) {
-            throw new IllegalArgumentException(this.getResource("i18n.ErrorMessage.NoRgString"));
+            throw new IllegalArgumentException(I18nResources.NoCpfString.toString());
         }
 
         this.number = rg;

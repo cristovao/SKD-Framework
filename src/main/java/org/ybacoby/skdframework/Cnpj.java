@@ -4,20 +4,22 @@
  */
 package org.ybacoby.skdframework;
 
+import org.ybacoby.skdframework.utils.I18nResources;
+
 /**
  *
  * @author cristovao
  */
-public final class Cnpj extends I18nAllSystem implements DocumentState<Cnpj> {
+public final class Cnpj implements DocumentState<Cnpj> {
 
     private final String cnpjNumber;
 
     public Cnpj(String cnpjNumber) {
         if (cnpjNumber == null) {
-            new IllegalArgumentException(this.getResource("i18n.ErrorMessage.NoCpfString"));
+            new IllegalArgumentException(I18nResources.NoCpfString.toString());
         }
         if (cnpjNumber.length() < 10) {
-            new IllegalArgumentException(this.getResource("i18n.ErrorMessage.NoCpfString"));
+            new IllegalArgumentException(I18nResources.NoCpfString.toString());
         }
         cnpjNumber = cnpjNumber.replaceAll("\\.", "");
         cnpjNumber = cnpjNumber.replaceAll("-", "");

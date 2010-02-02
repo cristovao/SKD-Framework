@@ -3,13 +3,15 @@
  */
 package org.ybacoby.skdframework;
 
+import org.ybacoby.skdframework.utils.I18nResources;
+
 /**
  * Serve para trabalhar com numeros de telefone
  * 
  * @author cristovao
  *
  */
-public final class Telephone extends I18nAllSystem implements ITelephone {
+public final class Telephone implements ITelephone {
 
     private final String phone;
     private boolean empty;
@@ -17,7 +19,7 @@ public final class Telephone extends I18nAllSystem implements ITelephone {
     public Telephone(String phone) {
         if (phone.length() < 9) {
             this.empty = true;
-            new IllegalArgumentException(this.getResource("i18n.ErrorMessage.NoPhoneString"));
+            new IllegalArgumentException(I18nResources.NoPhoneString.toString());
         }
 
         phone = phone.replaceAll("\\(", "");
@@ -26,7 +28,7 @@ public final class Telephone extends I18nAllSystem implements ITelephone {
         phone = phone.replaceAll("-", "");
         if (phone.length() < 9) {
             this.empty = true;
-            new IllegalArgumentException(this.getResource("i18n.ErrorMessage.NoPhoneString"));
+            new IllegalArgumentException(I18nResources.NoPhoneString.toString());
         }
         this.phone = phone;
         this.empty = false;

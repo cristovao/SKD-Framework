@@ -11,6 +11,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Currency;
+import java.util.Locale;
+import org.ybacoby.skdframework.Money;
+import org.ybacoby.skdframework.Rg;
 
 /**
  *
@@ -49,7 +53,7 @@ public class Repository {
         return this;
     }
 
-    public Repository stored(Object entity) throws SQLException, IllegalArgumentException, IllegalAccessException, ClassNotFoundException {
+    public Repository save(Object entity) throws SQLException, IllegalArgumentException, IllegalAccessException, ClassNotFoundException {
         this.open();
         Sql sql = new SqlANSI(entity);
         statement.executeUpdate(sql.insert().toString());
@@ -86,6 +90,10 @@ public class Repository {
                     field.set(entity, resultset.getFloat(field.getName()));
                 } else if (field.getType().equals(Double.class)) {
                     field.set(entity, resultset.getDouble(field.getName()));
+                } else if (field.getType().equals(Money.class)) {
+                    field.set(entity, new Money(resultset.getLong(field.getName()), Currency.getInstance(Locale.US)));
+                } else if (field.getType().equals(Rg.class)) {
+                    field.set(entity, new Rg(resultset.getString(field.getName())));
                 }
             }
 

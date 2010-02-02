@@ -1,26 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.ybacoby.skdframework;
 
 import java.awt.*;
 
 /**
- * Esta classe facilta a utilização da classe GridBagConstraints
+ * Esta classe facilta a utilizacao da classe GridBagConstraints
  *
  */
-
 public class GBC extends GridBagConstraints {
 
    /**
-    * Constrói um GBC com uma determinada posição de gradex e gradey e todos os outros valores de restrição
+    * Constroi um GBC com uma determinada posição de gradex e 
+    * gradey e todos os outros valores de restricao
     * de saco grande definidos como padrão;
     * @param gridx a posição de gridx
     * @param gridy a posição de gridy
     */
-
    public GBC( int gridx, int gridy ){
       this.gridx = gridx;
       this.gridy = gridy;
@@ -34,7 +28,6 @@ public class GBC extends GridBagConstraints {
     * @param gridwidth a celula se espalha na direção x
     * @param gridheight a celula se espalha na direção y
     */
-
    public GBC( int gridx, int gridy, int gridwidth, int gridheight ){
       this.gridx = gridx;
       this.gridy = gridy;
@@ -43,11 +36,10 @@ public class GBC extends GridBagConstraints {
    }
 
    /**
-    * Define a âncora;
+    * Define a ancora;
     * @param anchor o valor da âncora
     * @return devolve este objeto para modificações
     */
-
    public GBC setAnchor( int anchor ){
       this.anchor = anchor;
       return this;
@@ -58,7 +50,6 @@ public class GBC extends GridBagConstraints {
     * @param fill direção de preenchimento
     * @return retorna este objeto para modificações
     */
-
    public GBC setFill( int fill ){
       this.fill = fill;
       return this;
@@ -66,11 +57,10 @@ public class GBC extends GridBagConstraints {
 
    /**
     * Define os pesos das celulas;
-    * @param weightx peso da celula na direção x
-    * @param weighty peso da celula na direção y
+    * @param weightx peso da celula na direcao x
+    * @param weighty peso da celula na direcao y
     * @return retorna este objeto para modificações
     */
-
    public GBC setWeight( double weightx, double weighty ){
       this.weightx = weightx;
       this.weighty = weighty;
@@ -80,9 +70,8 @@ public class GBC extends GridBagConstraints {
    /**
     * Define o espaço das celulas;
     * @param distance espaçamento a ser utilizado em todas as direções
-    * @return retorna este objeto para modificações
+    * @return retorna este objeto para modificacoes
     */
-
    public GBC setInsets( int distance ){
       this.insets = new Insets( distance, distance, distance, distance );
       return this;
@@ -96,7 +85,6 @@ public class GBC extends GridBagConstraints {
     * @param right o espaçamento a ser usado na parte à direita
     * @return este objeto para modificações
     */
-
    public GBC setInsets( int top, int left, int bottom, int right ){
       this.insets = new Insets( top, left, bottom, right );
       return this;
@@ -106,9 +94,8 @@ public class GBC extends GridBagConstraints {
     * Define o preenchimento interno;
     * @param ipadx preenchimento interno na direção x
     * @param ipady preenchimento interno na direção y
-    * @return este objeto para modificações
+    * @return este objeto para modificacoes
     */
-
    public GBC setIpad( int ipadx, int ipady ){
       this.ipadx = ipadx;
       this.ipady = ipady;

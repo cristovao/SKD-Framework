@@ -9,7 +9,7 @@ package org.ybacoby.skdframework;
  * Classe que serve para tratar de ceps
  * @author cristovao
  */
-public final class Cep extends I18nAllSystem implements DocumentState<Cep> {
+public final class Cep implements DocumentState<Cep> {
 
     private final String firstZipNumber;
     private final String lastZipNumber;

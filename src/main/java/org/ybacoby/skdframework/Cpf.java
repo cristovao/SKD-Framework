@@ -3,22 +3,24 @@
  */
 package org.ybacoby.skdframework;
 
+import org.ybacoby.skdframework.utils.I18nResources;
+
 /**
  * Classe para gerenciar CPFs
  * 
  * @author cristovao
  *
  */
-public final class Cpf extends I18nAllSystem implements DocumentState<Cpf> {
+public final class Cpf implements DocumentState<Cpf> {
 
     private final String cpfNumber;
 
     public Cpf(String cpf) {
         if (cpf == null) {
-            new IllegalArgumentException(this.getResource("i18n.ErrorMessage.NoCpfString"));
+            new IllegalArgumentException(I18nResources.NoCpfString.toString());
         }
         if (cpf.length() < 10) {
-            new IllegalArgumentException(this.getResource("i18n.ErrorMessage.NoCpfString"));
+            new IllegalArgumentException(I18nResources.NoCpfString.toString());
         }
         cpf = cpf.replaceAll("\\.", "");
         cpf = cpf.replaceAll("-", "");
