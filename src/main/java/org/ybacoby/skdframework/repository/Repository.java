@@ -15,6 +15,7 @@ import java.util.Currency;
 import java.util.Locale;
 import org.ybacoby.skdframework.Cep;
 import org.ybacoby.skdframework.Cnpj;
+import org.ybacoby.skdframework.Date;
 import org.ybacoby.skdframework.Money;
 import org.ybacoby.skdframework.Rg;
 
@@ -100,6 +101,8 @@ public class Repository {
                     field.set(entity, new Cep(resultset.getString(field.getName())));
                 } else if (field.getType().equals(Cnpj.class)) {
                     field.set(entity, new Cnpj(resultset.getString(field.getName())));
+                } else if (field.getType().equals(Date.class)) {
+                    field.set(entity, new Date(resultset.getDate(field.getName())));
                 }
             }
 

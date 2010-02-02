@@ -48,6 +48,16 @@ public class Date extends java.util.Date {
 	}
 
 	/**
+	 * Constructor
+	 * @param date
+	 */
+	public Date(java.util.Date date) {
+		super(date.getTime());
+		this.timer = super.getTime();
+		this.date = this.sdfData.format(this);
+	}
+
+	/**
 	 * @see java.util.Date#getTime()
 	 */
 	@Override
