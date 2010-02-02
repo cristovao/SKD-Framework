@@ -19,6 +19,7 @@ import org.ybacoby.skdframework.Date;
 import org.ybacoby.skdframework.InscricaoEstadual;
 import org.ybacoby.skdframework.Money;
 import org.ybacoby.skdframework.Rg;
+import org.ybacoby.skdframework.Telephone;
 
 /**
  *
@@ -106,6 +107,8 @@ public class Repository {
                     field.set(entity, new Date(resultset.getDate(field.getName())));
                 } else if (field.getType().equals(InscricaoEstadual.class)) {
                     field.set(entity, new InscricaoEstadual(resultset.getString(field.getName())));
+                } else if (field.getType().equals(Telephone.class)) {
+                    field.set(entity, new Telephone(resultset.getString(field.getName())));
                 }
             }
 
