@@ -13,7 +13,7 @@ public class RepositoryTest
     @Test
     public void testSqlSelect() {
 
-        Sql sql = new SqlANSI(new PersonTest());
+        Sql sql = new SqlANSI(new EntityTestTable.PersonTest());
         sql.select();
 
         Assert.assertEquals("SELECT id, nome FROM persontest;", sql.toString());
