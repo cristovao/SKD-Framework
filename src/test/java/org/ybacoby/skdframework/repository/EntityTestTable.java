@@ -9,7 +9,7 @@ package org.ybacoby.skdframework.repository;
  * @author cristovao
  */
 @Entity(table = "Test")
-public class EntityTestTable {
+public class EntityTestTable implements Persistence {
 
     @PrimaryKey
     private Integer id;
@@ -36,7 +36,7 @@ public class EntityTestTable {
         this.nome = nome;
     }
 
-    public static class PersonTest {
+    public static class PersonTest implements Persistence {
 
         @PrimaryKey
         private Integer id;

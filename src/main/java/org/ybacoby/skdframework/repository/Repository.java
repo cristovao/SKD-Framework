@@ -105,7 +105,7 @@ public final class Repository {
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
      */
-    public Repository save(Object entity) throws SQLException, IllegalArgumentException, IllegalAccessException, ClassNotFoundException, SQLException, InstantiationException {
+    public Repository save(Persistence entity) throws SQLException, IllegalArgumentException, IllegalAccessException, ClassNotFoundException, SQLException, InstantiationException {
         this.open();
         Sql sql = new SqlANSI(entity);
         if (this.criteriaQuery(sql.select().where().equalsIds()).isEmpty()) {
@@ -127,7 +127,7 @@ public final class Repository {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public Repository delete(Object entity) throws SQLException, ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    public Repository delete(Persistence entity) throws SQLException, ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
         this.open();
         Sql sql = new SqlANSI(entity);
         if (this.criteriaQuery(sql.select().where().equalsIds()).isEmpty()) {

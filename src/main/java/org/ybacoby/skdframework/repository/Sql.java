@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public abstract class Sql {
 
-    private Object entity;
+    private Persistence entity;
     protected Class clasz;
     private StringBuilder construtor;
 
@@ -21,7 +21,7 @@ public abstract class Sql {
      * Construtor inicial que recebe um objeto como entidade
      * @param entity Usado para criacao, alteracao, pesquisa e delecao.
      */
-    public Sql(Object entity) {
+    public Sql(Persistence entity) {
         this.entity = entity;
         this.construtor = new StringBuilder();
         this.clasz = entity.getClass();
