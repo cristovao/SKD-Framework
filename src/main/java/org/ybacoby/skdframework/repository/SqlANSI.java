@@ -11,11 +11,7 @@ package org.ybacoby.skdframework.repository;
  */
 public final class SqlANSI extends Sql {
 
-    public SqlANSI(Persistence entity) {
+    public SqlANSI(Object entity) {
         super(entity);
-    }
-
-    public SqlANSI(Class clasz) {
-        super(clasz);
     }
 }

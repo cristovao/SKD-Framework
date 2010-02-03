@@ -105,13 +105,15 @@ public final class Repository {
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
      */
-    public Repository save(Persistence entity) throws SQLException, IllegalArgumentException, IllegalAccessException, ClassNotFoundException, SQLException, InstantiationException {
+    public Repository save(Object entity) throws SQLException, IllegalArgumentException, IllegalAccessException, ClassNotFoundException, SQLException, InstantiationException {
         this.open();
         Sql sql = new SqlANSI(entity);
-        if (this.criteriaQuery(sql.select().where().equalsIds()).isEmpty()) {
+        if (!sql.haveWhereEqualsIds()) {
             statement.executeUpdate(sql.insert().toString());
+        } else if (this.query(sql.select().whereEqualsIds()).isEmpty()) {
+            statement.executeUpdate(new SqlANSI(entity).insert().toString());
         } else {
-            statement.executeUpdate(sql.update().where().equalsIds().toString());
+            statement.executeUpdate(new SqlANSI(entity).update().where().whereEqualsIds().toString());
         }
         this.close();
         return this;
@@ -127,11 +129,13 @@ public final class Repository {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public Repository delete(Persistence entity) throws SQLException, ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    public Repository delete(Object entity) throws SQLException, ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
         this.open();
         Sql sql = new SqlANSI(entity);
-        if (this.criteriaQuery(sql.select().where().equalsIds()).isEmpty()) {
-            statement.executeUpdate(sql.delete().toString());
+        if (sql.haveWhereEqualsIds()) {
+            if (!this.query(sql.select().whereEqualsIds()).isEmpty()) {
+                statement.executeUpdate(new SqlANSI(entity).delete().toString());
+            }
         }
         this.close();
         return this;
@@ -153,6 +157,12 @@ public final class Repository {
      */
     public ArrayList<Object> criteriaQuery(Sql sql) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         this.open();
+        ArrayList<Object> entitys = this.query(sql);
+        this.close();
+        return entitys;
+    }
+
+    private ArrayList<Object> query(Sql sql) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         ArrayList<Object> entitys = null;
         entitys = new ArrayList<Object>();
         ResultSet resultset = statement.executeQuery(sql.toString());
@@ -191,7 +201,6 @@ public final class Repository {
 
             entitys.add(entity);
         }
-        this.close();
         return entitys;
     }
 }
