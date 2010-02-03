@@ -105,10 +105,14 @@ public final class Repository {
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
      */
-    public Repository save(Object entity) throws SQLException, IllegalArgumentException, IllegalAccessException, ClassNotFoundException {
+    public Repository save(Object entity) throws SQLException, IllegalArgumentException, IllegalAccessException, ClassNotFoundException, SQLException, InstantiationException {
         this.open();
         Sql sql = new SqlANSI(entity);
-        statement.executeUpdate(sql.insert().toString());
+        if (this.criteriaQuery(sql.select().where().equalsIds()).isEmpty()) {
+            statement.executeUpdate(sql.insert().toString());
+        } else {
+            statement.executeUpdate(sql.update().where().equalsIds().toString());
+        }
         this.close();
         return this;
     }
@@ -123,14 +127,30 @@ public final class Repository {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public Repository delete(Object entity) throws SQLException, ClassNotFoundException {
+    public Repository delete(Object entity) throws SQLException, ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
         this.open();
         Sql sql = new SqlANSI(entity);
-        statement.executeUpdate(sql.delete().toString());
+        if (this.criteriaQuery(sql.select().where().equalsIds()).isEmpty()) {
+            statement.executeUpdate(sql.delete().toString());
+        }
         this.close();
         return this;
     }
 
+    /**
+     * Neste incrivel e facil metodo sera onde sera feito criterios de buscas,
+     * neste caso, sera aqui onde toda pesquisa sera feita, necessitando apenas
+     * do builder Sql para que possa assim criar os comandos sqls que serao
+     * utilizados, sendo o processo bastante simples e direto, com esse comando
+     * sera onde podera retornar sempre um ArrayList de todos os objetos
+     * utilizados como resultados dos criterios de pesquisa.
+     * @param sql Builder onde sera utilizado o comando
+     * @return
+     * @throws SQLException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     */
     public ArrayList<Object> criteriaQuery(Sql sql) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         this.open();
         ArrayList<Object> entitys = null;

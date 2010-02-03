@@ -117,13 +117,17 @@ public abstract class Sql {
             iteracao++;
         }
 
-        iteracao = 0;
-        total = this.getIdsValues().size();
+        return this;
+    }
+
+    public Sql equalsIds() {
+        Integer iteracao = 0;
+        Integer total = this.getIdsValues().size();
         for (String id : this.getIdsColumns()) {
             if (iteracao < total - 1) {
-                this.where().equals(id, this.getIdsValues().get(iteracao)).and();
+                this.equals(id, this.getIdsValues().get(iteracao)).and();
             } else {
-                this.where().equals(id, this.getIdsValues().get(iteracao));
+                this.equals(id, this.getIdsValues().get(iteracao));
             }
             iteracao++;
         }
